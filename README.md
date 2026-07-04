@@ -32,28 +32,6 @@ Built with ❤️ by **Rahul Shyam** — a civil engineer who codes.
 
 ---
 
-## Maintainer
-
-<p>
-  <strong>Rahul Shyam</strong><br/>
-  <em>Civil Engineer · Full-Stack Developer · AI Builder</em><br/>
-  Chennai, India 🇮🇳<br/>
-  B.E. Civil Engineering @ ESEC
-</p>
-
-| | |
-|---|---|
-| **Portfolio** | [rahulshyam-portfolio.vercel.app](https://rahulshyam-portfolio.vercel.app/) |
-| **GitHub** | [@rahulcvwebsitehosting](https://github.com/rahulcvwebsitehosting) |
-| **LinkedIn** | [in/rahulshyamcivil](https://linkedin.com/in/rahulshyamcivil) |
-| **X** | [@RahulShyamCV](https://x.com/RahulShyamCV) |
-
-**Experience:** Site Engineering Intern @ Tata Projects (Chennai Metro), BIM Intern @ Pinnacle Future Build.
-
-When I'm not building Minecraft bots, I'm working on AI-powered construction tools, browser agents, and full-stack apps — 40+ projects shipped on Vercel.
-
----
-
 ## New Features
 
 | Feature | Description | Status |
@@ -154,6 +132,30 @@ Full Javadocs: [baritone.leijurv.com](https://baritone.leijurv.com/)
 - The entire Baritone community on [Discord](http://discord.gg/s6fRBAUpmr)
 
 This project is licensed under LGPL-3.0 with the Baritone Anime Exception.
+
+---
+
+---
+
+## Maintainer
+
+<p>
+  <strong>Rahul Shyam</strong><br/>
+  <em>Civil Engineer · Full-Stack Developer · AI Builder</em><br/>
+  Chennai, India 🇮🇳<br/>
+  B.E. Civil Engineering @ ESEC
+</p>
+
+| | |
+|---|---|
+| **Portfolio** | [rahulshyam-portfolio.vercel.app](https://rahulshyam-portfolio.vercel.app/) |
+| **GitHub** | [@rahulcvwebsitehosting](https://github.com/rahulcvwebsitehosting) |
+| **LinkedIn** | [in/rahulshyamcivil](https://linkedin.com/in/rahulshyamcivil) |
+| **X** | [@RahulShyamCV](https://x.com/RahulShyamCV) |
+
+**Experience:** Site Engineering Intern @ Tata Projects (Chennai Metro), BIM Intern @ Pinnacle Future Build.
+
+When I'm not building Minecraft bots, I'm working on AI-powered construction tools, browser agents, and full-stack apps — 40+ projects shipped on Vercel.
 
 ---
 
