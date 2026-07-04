@@ -80,6 +80,7 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
     private boolean safeStopActive;
     private boolean centeringActive;
     private int safeStopTicksLeft;
+    private int safeStopTotalTicks;
 
     private final LinkedBlockingQueue<PathEvent> toDispatch = new LinkedBlockingQueue<>();
 
@@ -606,6 +607,7 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
     private void startSafeStop() {
         safeStopActive = true;
         safeStopTicksLeft = Baritone.settings().safeStopDecelerationTicks.value;
+        safeStopTotalTicks = Math.max(1, safeStopTicksLeft);
         baritone.getInputOverrideHandler().getBlockBreakHelper().stopBreakingBlock();
 
         if (safeStopTicksLeft <= 0) {
@@ -634,7 +636,7 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
         safeStopTicksLeft--;
 
         InputOverrideHandler handler = baritone.getInputOverrideHandler();
-        int total = Baritone.settings().safeStopDecelerationTicks.value;
+        int total = safeStopTotalTicks;
         int elapsed = total - safeStopTicksLeft;
         float progress = (float) elapsed / total;
 
