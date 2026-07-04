@@ -33,12 +33,15 @@ import baritone.pathing.calc.AbstractNodeCostSearch;
 import baritone.pathing.movement.CalculationContext;
 import baritone.pathing.movement.MovementHelper;
 import baritone.pathing.path.PathExecutor;
+import baritone.utils.InputOverrideHandler;
 import baritone.utils.PathRenderer;
 import baritone.utils.PathingCommandContext;
 import baritone.utils.pathing.Favoring;
+import baritone.api.utils.input.Input;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -74,6 +77,9 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
 
     private BetterBlockPos expectedSegmentStart;
 
+    private boolean safeStopActive;
+    private int safeStopTicksLeft;
+
     private final LinkedBlockingQueue<PathEvent> toDispatch = new LinkedBlockingQueue<>();
 
     public PathingBehavior(Baritone baritone) {
@@ -107,6 +113,7 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
         tickPath();
         ticksElapsedSoFar++;
         dispatchEvents();
+        tickSafeStop();
     }
 
     @Override
@@ -131,7 +138,11 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
         unpausedLastTick = true;
         if (cancelRequested) {
             cancelRequested = false;
-            baritone.getInputOverrideHandler().clearAllKeys();
+            if (Baritone.settings().safeStop.value) {
+                startSafeStop();
+            } else {
+                baritone.getInputOverrideHandler().clearAllKeys();
+            }
         }
         synchronized (pathPlanLock) {
             synchronized (pathCalcLock) {
@@ -363,11 +374,20 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
         queuePathEvent(PathEvent.CANCELED);
         synchronized (pathPlanLock) {
             getInProgress().ifPresent(AbstractNodeCostSearch::cancel);
+            if (safeStopActive) {
+                baritone.getInputOverrideHandler().clearAllKeys();
+                baritone.getInputOverrideHandler().getBlockBreakHelper().stopBreakingBlock();
+                safeStopActive = false;
+            }
             if (current != null) {
                 current = null;
                 next = null;
-                baritone.getInputOverrideHandler().clearAllKeys();
-                baritone.getInputOverrideHandler().getBlockBreakHelper().stopBreakingBlock();
+                if (Baritone.settings().safeStop.value && !safeStopActive) {
+                    startSafeStop();
+                } else {
+                    baritone.getInputOverrideHandler().clearAllKeys();
+                    baritone.getInputOverrideHandler().getBlockBreakHelper().stopBreakingBlock();
+                }
             }
         }
     }
@@ -574,6 +594,71 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
         }
         return new AStarPathFinder(realStart, start.getX(), start.getY(), start.getZ(), transformed, favoring, context);
 
+    }
+
+    private void startSafeStop() {
+        safeStopActive = true;
+        safeStopTicksLeft = Baritone.settings().safeStopDecelerationTicks.value;
+        baritone.getInputOverrideHandler().getBlockBreakHelper().stopBreakingBlock();
+
+        if (safeStopTicksLeft <= 0) {
+            finishSafeStop();
+            return;
+        }
+
+        Vec3 vel = ctx.player().getDeltaMovement();
+        if (ctx.player().onGround() && Math.abs(vel.x) + Math.abs(vel.z) < 0.01) {
+            finishSafeStop();
+        }
+    }
+
+    private void tickSafeStop() {
+        if (!safeStopActive) {
+            return;
+        }
+        if (safeStopTicksLeft <= 0) {
+            finishSafeStop();
+            return;
+        }
+        safeStopTicksLeft--;
+
+        InputOverrideHandler handler = baritone.getInputOverrideHandler();
+        int total = Baritone.settings().safeStopDecelerationTicks.value;
+        int elapsed = total - safeStopTicksLeft;
+        float progress = (float) elapsed / total;
+
+        Vec3 vel = ctx.player().getDeltaMovement();
+        if (ctx.player().onGround() && Math.abs(vel.x) + Math.abs(vel.z) < 0.01) {
+            finishSafeStop();
+            return;
+        }
+
+        if (progress > 0.5f && ctx.player().onGround()) {
+            handler.setInputForceState(Input.MOVE_FORWARD, false);
+            handler.setInputForceState(Input.MOVE_BACK, false);
+            handler.setInputForceState(Input.MOVE_LEFT, false);
+            handler.setInputForceState(Input.MOVE_RIGHT, false);
+        }
+
+        if (ctx.player().onGround()) {
+            handler.setInputForceState(Input.JUMP, false);
+        }
+
+        boolean hasMovement = handler.isInputForcedDown(Input.MOVE_FORWARD)
+                || handler.isInputForcedDown(Input.MOVE_BACK)
+                || handler.isInputForcedDown(Input.MOVE_LEFT)
+                || handler.isInputForcedDown(Input.MOVE_RIGHT);
+        if (ctx.player().onGround() && hasMovement) {
+            handler.setInputForceState(Input.SNEAK, true);
+        }
+    }
+
+    private void finishSafeStop() {
+        baritone.getInputOverrideHandler().clearAllKeys();
+        safeStopActive = false;
+        if (Baritone.settings().safeStopCenterOnBlock.value) {
+            baritone.getInputOverrideHandler().setInputForceState(Input.SNEAK, true);
+        }
     }
 
     @Override

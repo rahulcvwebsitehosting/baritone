@@ -810,6 +810,25 @@ public final class Settings {
     public final Setting<Boolean> sprintInWater = new Setting<>(true);
 
     /**
+     * When canceling pathing, smoothly decelerate instead of stopping instantly.
+     * This prevents the player from falling off edges due to momentum.
+     */
+    public final Setting<Boolean> safeStop = new Setting<>(true);
+
+    /**
+     * Number of ticks to spend decelerating during a safe stop.
+     * During this time, movement inputs are held and sneak is forced to brake.
+     * Higher values = smoother but longer stop. Set to 0 for instant stop.
+     */
+    public final Setting<Integer> safeStopDecelerationTicks = new Setting<>(5);
+
+    /**
+     * After a safe stop, force sneak to center and stay on the nearest block.
+     * Prevents the player from sliding off the edge after stopping.
+     */
+    public final Setting<Boolean> safeStopCenterOnBlock = new Setting<>(false);
+
+    /**
      * When GetToBlockProcess or MineProcess fails to calculate a path, instead of just giving up, mark the closest instance
      * of that block as "unreachable" and go towards the next closest. GetToBlock expands this search to the whole "vein"; MineProcess does not.
      * This is because MineProcess finds individual impossible blocks (like one block in a vein that has gravel on top then lava, so it can't break)

@@ -242,7 +242,7 @@ public final class FarmProcess extends BaritoneProcessHelper implements IFarmPro
         if (filter.has(Blocks.POTATOES) && item == Items.POTATO) return true;
         if (filter.has(Blocks.BEETROOTS) && (item == Items.BEETROOT || item == Items.BEETROOT_SEEDS)) return true;
         if ((filter.has(Blocks.TORCHFLOWER_CROP) || filter.has(Blocks.TORCHFLOWER)) && item == Items.TORCHFLOWER_SEEDS) return true;
-        if ((filter.has(Blocks.PITCHER_CROP) || filter.has(Blocks.PITCHER)) && item == Items.PITCHER_POD) return true;
+        if (filter.has(Blocks.PITCHER_CROP) && item == Items.PITCHER_POD) return true;
         if (filter.has(Blocks.PUMPKIN_STEM) || filter.has(Blocks.PUMPKIN)) {
             if (item == Items.PUMPKIN_SEEDS || item == Blocks.PUMPKIN.asItem()) return true;
         }

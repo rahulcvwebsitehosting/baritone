@@ -23,14 +23,38 @@ import baritone.api.command.Command;
 import baritone.api.command.argument.IArgConsumer;
 import baritone.api.command.datatypes.ForBlockOptionalMeta;
 import baritone.api.command.exception.CommandException;
+import baritone.api.command.exception.CommandInvalidTypeException;
 import baritone.api.utils.BlockOptionalMeta;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FarmListCommand extends Command {
+
+    private static final Set<Block> FARMABLE_BLOCKS = new HashSet<>(Arrays.asList(
+            Blocks.WHEAT,
+            Blocks.CARROTS,
+            Blocks.POTATOES,
+            Blocks.BEETROOTS,
+            Blocks.TORCHFLOWER_CROP,
+            Blocks.TORCHFLOWER,
+            Blocks.PITCHER_CROP,
+            Blocks.PUMPKIN,
+            Blocks.MELON,
+            Blocks.NETHER_WART,
+            Blocks.COCOA,
+            Blocks.SWEET_BERRY_BUSH,
+            Blocks.SUGAR_CANE,
+            Blocks.BAMBOO,
+            Blocks.CACTUS
+    ));
 
     public FarmListCommand(IBaritone baritone) {
         super(baritone, "farmlist");
@@ -39,13 +63,29 @@ public class FarmListCommand extends Command {
     @Override
     public void execute(String label, IArgConsumer args) throws CommandException {
         args.requireMin(1);
-        List<BlockOptionalMeta> boms = new ArrayList<>();
+        Set<BlockOptionalMeta> boms = new LinkedHashSet<>();
         while (args.hasAny()) {
-            boms.add(args.getDatatypeFor(ForBlockOptionalMeta.INSTANCE));
+            BlockOptionalMeta bom = args.getDatatypeFor(ForBlockOptionalMeta.INSTANCE);
+            Block block = bom.getBlock();
+            if (!FARMABLE_BLOCKS.contains(block)) {
+                throw new CommandInvalidTypeException(
+                        args.consumed(),
+                        "a farmable crop block",
+                        block.getDescriptionId()
+                );
+            }
+            boms.add(bom);
         }
         BaritoneAPI.getProvider().getWorldScanner().repack(ctx);
-        logDirect(String.format("Farming %s", boms.toString()));
-        baritone.getFarmProcess().farm(0, null, boms.toArray(new BlockOptionalMeta[0]));
+        String cropList = boms.stream()
+                .map(bom -> {
+                    String name = bom.getBlock().getDescriptionId();
+                    return name.substring(name.lastIndexOf('.') + 1);
+                })
+                .map(s -> Character.toUpperCase(s.charAt(0)) + s.substring(1))
+                .collect(Collectors.joining(", "));
+        logDirect(String.format("Now farming: %s", cropList));
+        baritone.getFarmProcess().farm(boms.toArray(new BlockOptionalMeta[0]));
     }
 
     @Override
@@ -71,8 +111,7 @@ public class FarmListCommand extends Command {
                 "",
                 "Usage:",
                 "> farmlist minecraft:wheat minecraft:carrots - Only farms wheat and carrots.",
-                "> farmlist wheat carrots potato - Only farms wheat, carrots, and potatoes.",
-                "> farmlist - Lists all available crop types that can be farmed (not yet implemented)."
+                "> farmlist wheat carrots potato - Only farms wheat, carrots, and potatoes."
         );
     }
 }
