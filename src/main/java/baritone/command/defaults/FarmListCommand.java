@@ -38,13 +38,12 @@ import java.util.stream.Stream;
 
 public class FarmListCommand extends Command {
 
-    private static final Set<Block> FARMABLE_BLOCKS = new HashSet<>(Arrays.asList(
+private static final Set<Block> FARMABLE_BLOCKS = new HashSet<>(Arrays.asList(
             Blocks.WHEAT,
             Blocks.CARROTS,
             Blocks.POTATOES,
             Blocks.BEETROOTS,
             Blocks.TORCHFLOWER_CROP,
-            Blocks.TORCHFLOWER,
             Blocks.PITCHER_CROP,
             Blocks.PUMPKIN,
             Blocks.MELON,

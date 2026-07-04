@@ -78,6 +78,7 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
     private BetterBlockPos expectedSegmentStart;
 
     private boolean safeStopActive;
+    private boolean centeringActive;
     private int safeStopTicksLeft;
 
     private final LinkedBlockingQueue<PathEvent> toDispatch = new LinkedBlockingQueue<>();
@@ -613,6 +614,10 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
     }
 
     private void tickSafeStop() {
+        if (centeringActive) {
+            tickCentering();
+            return;
+        }
         if (!safeStopActive) {
             return;
         }
@@ -658,7 +663,26 @@ public final class PathingBehavior extends Behavior implements IPathingBehavior,
         safeStopActive = false;
         if (Baritone.settings().safeStopCenterOnBlock.value) {
             baritone.getInputOverrideHandler().setInputForceState(Input.SNEAK, true);
+            centeringActive = true;
         }
+    }
+
+    private void tickCentering() {
+        Vec3 pos = ctx.player().position();
+        double targetX = Math.floor(pos.x) + 0.5;
+        double targetZ = Math.floor(pos.z) + 0.5;
+        double dx = pos.x - targetX;
+        double dz = pos.z - targetZ;
+        double horizontalDist = Math.sqrt(dx * dx + dz * dz);
+        if (ctx.player().onGround() && horizontalDist < 0.15) {
+            finishCentering();
+        }
+    }
+
+    private void finishCentering() {
+        baritone.getInputOverrideHandler().clearAllKeys();
+        centeringActive = false;
+        safeStopActive = false;
     }
 
     @Override
