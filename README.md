@@ -25,3 +25,44 @@ A personal fork of [Baritone](https://github.com/cabaletta/baritone) built on th
 ## License
 
 LGPL-3.0 with the Baritone Anime Exception.
+
+---
+
+## Badges
+
+<p align="center">
+  <img src="https://img.shields.io/github/downloads/rahulcvwebsitehosting/baritone/total?color=22c55e&label=downloads" alt="Downloads"/>
+  <img src="https://img.shields.io/github/release/rahulcvwebsitehosting/baritone?color=22c55e&label=version" alt="Release"/>
+  <img src="https://img.shields.io/badge/license-LGPL--3.0-green.svg" alt="License"/>
+  <img src="https://img.shields.io/github/issues/rahulcvwebsitehosting/baritone?color=22c55e" alt="Issues"/>
+  <img src="https://img.shields.io/badge/MC-26.2-brightgreen.svg" alt="Minecraft 26.2"/>
+  <img src="https://img.shields.io/badge/java-25-orange.svg" alt="Java 25"/>
+  <img src="https://img.shields.io/github/last-commit/rahulcvwebsitehosting/baritone?color=22c55e" alt="Last commit"/>
+  <img src="https://img.shields.io/github/languages/code-size/rahulcvwebsitehosting/baritone?color=22c55e" alt="Code size"/>
+</p>
+
+---
+
+## Maintainer
+
+<p>
+  <strong>Rahul Shyam</strong><br/>
+  <em>Civil Engineer · Full-Stack Developer · AI Builder</em><br/>
+  Chennai, India 🇮🇳<br/>
+  B.E. Civil Engineering @ ESEC
+</p>
+
+| | |
+|---|---|
+| **Portfolio** | [rahulshyam-portfolio.vercel.app](https://rahulshyam-portfolio.vercel.app/) |
+| **GitHub** | [@rahulcvwebsitehosting](https://github.com/rahulcvwebsitehosting) |
+| **LinkedIn** | [in/rahulshyamcivil](https://linkedin.com/in/rahulshyamcivil) |
+| **X** | [@RahulShyamCV](https://x.com/RahulShyamCV) |
+
+**Experience:** Site Engineering Intern @ Tata Projects (Chennai Metro), BIM Intern @ Pinnacle Future Build.
+
+---
+
+<p align="center">
+  <sub>If you find this useful, <a href="https://github.com/rahulcvwebsitehosting/baritone">star the repo</a> ⭐</sub>
+</p>
