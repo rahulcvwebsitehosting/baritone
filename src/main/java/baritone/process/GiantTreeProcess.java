@@ -104,9 +104,14 @@ public final class GiantTreeProcess extends BaritoneProcessHelper {
             }
 
             BlockState state = baritone.bsi.get0(below);
-            if (state.getBlock() instanceof AirBlock || !filter.has(state)) {
+            if (state.getBlock() instanceof AirBlock) {
                 return new PathingCommand(new GoalBlock(below),
                         PathingCommandType.REVALIDATE_GOAL_AND_PATH);
+            }
+            if (!filter.has(state)) {
+                logDirect("Giant tree fully mined");
+                onLostControl();
+                return null;
             }
 
             if (!MovementHelper.avoidBreaking(baritone.bsi, below.getX(), below.getY(),

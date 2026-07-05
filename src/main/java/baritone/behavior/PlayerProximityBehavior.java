@@ -32,6 +32,8 @@ import net.minecraft.world.entity.player.Player;
  */
 public final class PlayerProximityBehavior extends Behavior implements Helper {
 
+    private boolean playerWasNearby;
+
     public PlayerProximityBehavior(Baritone baritone) {
         super(baritone);
     }
@@ -58,6 +60,7 @@ public final class PlayerProximityBehavior extends Behavior implements Helper {
         if (!(ctx.world() instanceof ClientLevel level)) {
             return;
         }
+        boolean found = false;
         for (Player other : level.players()) {
             if (other == ctx.player()) {
                 continue; // don't pause on ourselves
@@ -70,11 +73,17 @@ public final class PlayerProximityBehavior extends Behavior implements Helper {
             double dy = other.getY() - meY;
             double dz = other.getZ() - meZ;
             if (dx * dx + dy * dy + dz * dz <= radiusSq) {
+                found = true;
                 baritone.getPathingBehavior().requestPause();
-                logDirect("Pausing pathing: player " + other.getName().getString()
-                        + " is within " + (int) radius + " blocks");
+                if (!playerWasNearby) {
+                    logDirect("Pausing pathing: player " + other.getName().getString()
+                            + " is within " + (int) radius + " blocks");
+                    playerWasNearby = true;
+                }
                 return;
             }
         }
+        // No nearby players — reset announcement flag so we re-announce when one arrives
+        playerWasNearby = false;
     }
 }

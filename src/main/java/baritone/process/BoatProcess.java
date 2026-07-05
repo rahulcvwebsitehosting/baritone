@@ -253,6 +253,14 @@ public final class BoatProcess extends BaritoneProcessHelper {
         return v != null && v.getClass().getSimpleName().toLowerCase().contains("boat");
     }
 
+    /**
+     * Mark as temporary so we don't wipe other processes' goals when we take control.
+     */
+    @Override
+    public boolean isTemporary() {
+        return true;
+    }
+
     @Override
     public void onLostControl() {
         phase = Phase.IDLE;

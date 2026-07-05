@@ -21,12 +21,9 @@ import baritone.api.IBaritone;
 import baritone.api.command.Command;
 import baritone.api.command.argument.IArgConsumer;
 import baritone.api.command.exception.CommandException;
-import baritone.api.pathing.goals.Goal;
 import baritone.api.pathing.goals.GoalBlock;
-import baritone.api.pathing.goals.GoalComposite;
 import baritone.utils.RouteStore;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -57,17 +54,16 @@ public class LoadRouteCommand extends Command {
             logDirect("Route '" + name + "' is empty.");
             return;
         }
-        List<Goal> goals = new ArrayList<>();
-        StringBuilder summary = new StringBuilder("Route '" + name + "': ");
+        RouteStore.RouteWaypoint first = route.get(0);
+        StringBuilder summary = new StringBuilder("Route '" + name + "' (").append(route.size()).append(" waypoints): ");
         for (int i = 0; i < route.size(); i++) {
             RouteStore.RouteWaypoint wp = route.get(i);
-            goals.add(new GoalBlock(wp.toPos()));
             if (i > 0) summary.append(" -> ");
             summary.append(wp.name).append("(").append(wp.x).append(",").append(wp.y).append(",").append(wp.z).append(")");
         }
         logDirect(summary.toString());
-        Goal composite = new GoalComposite(goals.toArray(new Goal[0]));
-        baritone.getCustomGoalProcess().setGoalAndPath(composite);
+        logDirect("Pathing to waypoint 1 (" + first.name + "). Use #loadroute again after reaching it.");
+        baritone.getCustomGoalProcess().setGoalAndPath(new GoalBlock(first.toPos()));
     }
 
     @Override
