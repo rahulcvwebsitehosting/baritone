@@ -70,9 +70,12 @@ public class Baritone implements IBaritone {
     private final LookBehavior lookBehavior;
     private final InventoryBehavior inventoryBehavior;
     private final InputOverrideHandler inputOverrideHandler;
+    private final PlayerProximityBehavior playerProximityBehavior;
 
     private final FollowProcess followProcess;
     private final MineProcess mineProcess;
+    private final BoatProcess boatProcess;
+    private final GiantTreeProcess giantTreeProcess;
     private final GetToBlockProcess getToBlockProcess;
     private final CustomGoalProcess customGoalProcess;
     private final BuilderProcess builderProcess;
@@ -110,12 +113,15 @@ public class Baritone implements IBaritone {
             this.inventoryBehavior    = this.registerBehavior(InventoryBehavior::new);
             this.inputOverrideHandler = this.registerBehavior(InputOverrideHandler::new);
             this.registerBehavior(WaypointBehavior::new);
+            this.playerProximityBehavior = this.registerBehavior(PlayerProximityBehavior::new);
         }
 
         this.pathingControlManager = new PathingControlManager(this);
         {
             this.followProcess           = this.registerProcess(FollowProcess::new);
             this.mineProcess             = this.registerProcess(MineProcess::new);
+            this.boatProcess             = this.registerProcess(BoatProcess::new);
+            this.giantTreeProcess        = this.registerProcess(GiantTreeProcess::new);
             this.customGoalProcess       = this.registerProcess(CustomGoalProcess::new); // very high iq
             this.getToBlockProcess       = this.registerProcess(GetToBlockProcess::new);
             this.builderProcess          = this.registerProcess(BuilderProcess::new);
@@ -199,6 +205,14 @@ public class Baritone implements IBaritone {
     @Override
     public MineProcess getMineProcess() {
         return this.mineProcess;
+    }
+
+    public BoatProcess getBoatProcess() {
+        return this.boatProcess;
+    }
+
+    public GiantTreeProcess getGiantTreeProcess() {
+        return this.giantTreeProcess;
     }
 
     @Override

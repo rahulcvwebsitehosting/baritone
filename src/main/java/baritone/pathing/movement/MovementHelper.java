@@ -375,14 +375,30 @@ public interface MovementHelper extends ActionCosts, Helper {
 
     static boolean avoidWalkingInto(BlockState state) {
         Block block = state.getBlock();
-        return !state.getFluidState().isEmpty()
-                || (block == Blocks.MAGMA_BLOCK && !Baritone.settings().allowWalkOnMagmaBlocks.value)
-                || block == Blocks.CACTUS
-                || block == Blocks.SWEET_BERRY_BUSH
-                || block instanceof BaseFireBlock
-                || block == Blocks.END_PORTAL
+        if (!state.getFluidState().isEmpty()) {
+            return true;
+        }
+        // Built-in hazards that should never be pathed through:
+        if (block instanceof BaseFireBlock
                 || block == Blocks.COBWEB
-                || block == Blocks.BUBBLE_COLUMN;
+                || block == Blocks.BUBBLE_COLUMN) {
+            return true;
+        }
+        // Portal avoidance toggle (allowPortal=false treats all portals as obstacles).
+        // NOTE: the nether portal block is Blocks.NETHER_PORTAL in vanilla MC 1.21.
+        if (!Baritone.settings().allowPortal.value
+                && (block == Blocks.END_PORTAL || block == Blocks.NETHER_PORTAL || block == Blocks.END_GATEWAY)) {
+            return true;
+        }
+        // User-customizable hazard list:
+        if (Baritone.settings().hazardousBlocksToAvoid.value.contains(block)) {
+            return true;
+        }
+        // Legacy magma setting still respected for backward compatibility:
+        if (block == Blocks.MAGMA_BLOCK && !Baritone.settings().allowWalkOnMagmaBlocks.value) {
+            return true;
+        }
+        return false;
     }
 
     /**

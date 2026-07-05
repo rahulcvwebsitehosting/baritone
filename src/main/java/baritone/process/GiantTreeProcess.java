@@ -143,24 +143,24 @@ public final class GiantTreeProcess extends BaritoneProcessHelper {
         int radius = Baritone.settings().giantTreeSearchRadius.value;
         BlockPos feet = ctx.playerFeet();
 
+        int yTop = feet.getY() + 80;
+        int yBottom = feet.getY() - 8;
+
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
-                int runStart = feet.getY();
                 int run = 0;
-                int y = feet.getY() + 32;
-                if (y > feet.getY() + 64) y = feet.getY() + 64;
-                while (y >= feet.getY() - 16) {
+                int runTop = yTop;
+                for (int y = yTop; y >= yBottom; y--) {
                     BlockState s = baritone.bsi.get0(feet.getX() + dx, y, feet.getZ() + dz);
                     if (isLog(s)) {
-                        if (run == 0) runStart = y;
+                        if (run == 0) runTop = y;
                         run++;
                         if (run >= minH) {
-                            return Optional.of(new BlockPos(feet.getX() + dx, runStart, feet.getZ() + dz));
+                            return Optional.of(new BlockPos(feet.getX() + dx, runTop, feet.getZ() + dz));
                         }
                     } else {
                         run = 0;
                     }
-                    y--;
                 }
             }
         }

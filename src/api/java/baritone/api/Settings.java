@@ -261,6 +261,20 @@ public final class Settings {
     )));
 
     /**
+     * Blocks that Baritone will avoid WALKING INTO (treated as obstacles during pathing) in
+     * addition to the built-in hazards (fire, lava, etc.). Add blocks like cactus, magma,
+     * sweet_berry_bush, wither_rose, pointed_dripstone here to make Baritone path around them.
+     * Remove from this list to allow walking through them (e.g. if you have frost walker).
+     */
+    public final Setting<List<Block>> hazardousBlocksToAvoid = new Setting<>(new ArrayList<>(Arrays.asList(
+            Blocks.CACTUS,
+            Blocks.MAGMA_BLOCK,
+            Blocks.SWEET_BERRY_BUSH,
+            Blocks.WITHER_ROSE,
+            Blocks.POINTED_DRIPSTONE
+    )));
+
+    /**
      * this multiplies the break speed, if set above 1 it's "encourage breaking" instead
      */
     public final Setting<Double> avoidBreakingMultiplier = new Setting<>(.1);
@@ -494,6 +508,12 @@ public final class Settings {
      * instead of stopping one block before.
      */
     public final Setting<Boolean> enterPortal = new Setting<>(true);
+
+    /**
+     * When false, Baritone treats nether portals and end portals as solid obstacles and paths
+     * around them, instead of walking through them. Set to true (default) for vanilla behaviour.
+     */
+    public final Setting<Boolean> allowPortal = new Setting<>(true);
 
     /**
      * Don't repropagate cost improvements below 0.01 ticks. They're all just floating point inaccuracies,
@@ -808,6 +828,49 @@ public final class Settings {
      * Continue sprinting while in water
      */
     public final Setting<Boolean> sprintInWater = new Setting<>(true);
+
+    /**
+     * When true, Baritone automatically pauses pathing when any other (non-spectator) player
+     * comes within pausePlayersNearbyRadius blocks. Useful for avoiding suspicion on populated
+     * servers. Off by default.
+     */
+    public final Setting<Boolean> pauseOnPlayersNearby = new Setting<>(false);
+
+    /**
+     * The radius (in blocks) within which another player triggers pauseOnPlayersNearby.
+     */
+    public final Setting<Integer> pausePlayersNearbyRadius = new Setting<>(32);
+
+    /**
+     * When true, Baritone holds JUMP while moving through water so the player actually swims
+     * on/near the surface instead of sinking to the bottom and wading. Disable if your server
+     * flags JUMP-in-water as a flight anticheat.
+     */
+    public final Setting<Boolean> swimInWater = new Setting<>(true);
+
+    /**
+     * Enables the BoatProcess: when crossing a large body of water, Baritone will automatically
+     * place a boat, drive it toward the goal, and dismount on the far shore. Off by default.
+     */
+    public final Setting<Boolean> boatNavigationEnabled = new Setting<>(false);
+
+    /**
+     * Minimum contiguous water-area width (in blocks) before BoatProcess engages. Small ponds
+     * or rivers narrower than this are swum/pontoon-bridged normally.
+     */
+    public final Setting<Integer> boatMinWaterWidth = new Setting<>(8);
+
+    /**
+     * How far ahead (in blocks) the boat steering yaw-target is projected. Higher = smoother
+     * turns but more overshoot. Default tuned for open water.
+     */
+    public final Setting<Integer> boatLookaheadBlocks = new Setting<>(6);
+
+    /**
+     * If true, BoatProcess will automatically select and place a boat from the hotbar when it
+     * engages. If false, the player must already be holding a boat.
+     */
+    public final Setting<Boolean> boatAutoPlace = new Setting<>(true);
 
     /**
      * Enables the giant-tree mining strategy used by GiantTreeProcess: climb to the top of a

@@ -277,6 +277,12 @@ public class MovementTraverse extends Movement {
                 state.setInput(Input.SPRINT, true);
             }
 
+            if (Baritone.settings().swimInWater.value
+                    && (ctx.player().isInWater() || ctx.player().isUnderWater())) {
+                state.setInput(Input.JUMP, true);
+                state.setInput(Input.SPRINT, true);
+            }
+
             BlockState destDown = BlockStateInterface.get(ctx, dest.below());
             BlockPos against = positionsToBreak[0];
             if (feet.getY() != dest.getY() && ladder && (destDown.getBlock() == Blocks.VINE || destDown.getBlock() == Blocks.LADDER)) {
