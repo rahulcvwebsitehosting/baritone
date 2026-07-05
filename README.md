@@ -59,9 +59,9 @@ LGPL-3.0 with the Baritone Anime Exception.
 | **LinkedIn** | [in/rahulshyamcivil](https://linkedin.com/in/rahulshyamcivil) |
 | **X** | [@RahulShyamCV](https://x.com/RahulShyamCV) |
 
-**Experience:** Site Engineering Intern @ Tata Projects (Chennai Metro), BIM Intern @ Pinnacle Future Build.
-
 ---
+
+<p align="center">
 
 <p align="center">
   <sub>If you find this useful, <a href="https://github.com/rahulcvwebsitehosting/baritone">star the repo</a> ⭐</sub>
