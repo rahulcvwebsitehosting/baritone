@@ -61,7 +61,15 @@ private static final Set<Block> FARMABLE_BLOCKS = new HashSet<>(Arrays.asList(
 
     @Override
     public void execute(String label, IArgConsumer args) throws CommandException {
-        args.requireMin(1);
+        if (!args.hasAny()) {
+            String list = FARMABLE_BLOCKS.stream()
+                    .map(b -> b.getDescriptionId())
+                    .map(s -> s.substring(s.lastIndexOf('.') + 1))
+                    .collect(Collectors.joining(", "));
+            logDirect(String.format("Farmable crops: %s", list));
+            logDirect("Usage: farmlist <crop1> <crop2> ...  (e.g. farmlist wheat carrots)");
+            return;
+        }
         Set<BlockOptionalMeta> boms = new LinkedHashSet<>();
         while (args.hasAny()) {
             BlockOptionalMeta bom = args.getDatatypeFor(ForBlockOptionalMeta.INSTANCE);

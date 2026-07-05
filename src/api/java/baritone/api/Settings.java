@@ -810,6 +810,27 @@ public final class Settings {
     public final Setting<Boolean> sprintInWater = new Setting<>(true);
 
     /**
+     * Enables the giant-tree mining strategy used by GiantTreeProcess: climb to the top of a
+     * tall tree first, then mine downward standing on the remaining trunk logs. This avoids
+     * the falling-log pile and the throwaway-block placement that MineProcess does for tall trees.
+     * Off by default so normal MineProcess behaviour is unchanged.
+     */
+    public final Setting<Boolean> giantTreeMiningEnabled = new Setting<>(false);
+
+    /**
+     * Minimum trunk height (number of stacked log blocks in a vertical column) for a tree to be
+     * considered "giant" and routed to GiantTreeProcess. Trees shorter than this are mined by
+     * the normal MineProcess. Default 12 = roughly a 2x2 spruce.
+     */
+    public final Setting<Integer> giantTreeMinHeight = new Setting<>(12);
+
+    /**
+     * Maximum horizontal radius (in blocks, NOT squared) that GiantTreeProcess will search around
+     * the player's feet to find a giant-tree trunk to climb.
+     */
+    public final Setting<Integer> giantTreeSearchRadius = new Setting<>(24);
+
+    /**
      * When canceling pathing, smoothly decelerate instead of stopping instantly.
      * This prevents the player from falling off edges due to momentum.
      */
